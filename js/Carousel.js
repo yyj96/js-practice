@@ -41,69 +41,69 @@ window.onload = function () {
 
             //应用定时器切换图片,要使某元素位置发生改变，则需设置其为定位流
             /***************************************************************** */
-            // var imgleft= $("carousel_top_ul");
-            // var timer=null,target=-(200*a),step=10;
-            // var imgleft_step= imgleft.offsetLeft<target ? step : -step;
-            //     clearInterval(timer);
+            var imgleft= $("carousel_top_ul");
+            var timer=null,target=-(200*a),step=10;
+            var imgleft_step= imgleft.offsetLeft<target ? step : -step;
+                clearInterval(timer);
         
-            //     timer=setInterval(function(){
-            //         imgleft.style.left=imgleft.offsetLeft+imgleft_step+"px";
-            //         console.log(imgleft.offsetLeft);
-            //             if(Math.abs(target-imgleft.offsetLeft)<Math.abs(imgleft_step)){
-            //                 clearInterval(timer);
-            //                 imgleft.style.left=target+"px";
-            //             }
-            //     },50);
-            //     imgindex=a;
+                timer=setInterval(function(){
+                    imgleft.style.left=imgleft.offsetLeft+imgleft_step+"px";
+                    console.log(imgleft.offsetLeft);
+                        if(Math.abs(target-imgleft.offsetLeft)<Math.abs(imgleft_step)){
+                            clearInterval(timer);
+                            imgleft.style.left=target+"px";
+                        }
+                },50);
+                imgindex=a;
             /****************************************************************** */
-            imgindex=a;
+            // imgindex=a;
             }
         })(a)
     }
     /************************************************* */
-    // var imgleft= $("carousel_top_ul");
-    // var timer2=setInterval(function(){
-    //     imgindex++;
-    //     if(imgindex>s_ul_lis.length-1){
-    //         imgleft.style.left=0;
-    //         imgindex=1;
-    //     }
-    //         var timer=null,target=-(200*imgindex),step=10;
-    //         var imgleft_step= imgleft.offsetLeft<target ? step : -step;
-    //             clearInterval(timer);
-        
-    //             timer=setInterval(function(){
-    //                 imgleft.style.left=imgleft.offsetLeft+imgleft_step+"px";
-    //                 console.log(imgleft.offsetLeft);
-    //                     if(Math.abs(target-imgleft.offsetLeft)<Math.abs(imgleft_step)){
-    //                         clearInterval(timer);
-    //                         imgleft.style.left=target+"px";
-    //                     }
-    //             },50);
-    // },1000)
-    /************************************************* */
+    var imgleft= $("carousel_top_ul");
     var timer2=setInterval(function(){
-             imgindex++;
-             if(imgindex>s_ul_lis.length-1){
-                $("carousel_top_ul").style.left=0;
-                 imgindex=1;
-             }
-             constant($("carousel_top_ul"),-(200*imgindex),5);
+        imgindex++;
+        if(imgindex>s_ul_lis.length-1){
+            imgleft.style.left=0;
+            imgindex=1;
+        }
+            var timer=null,target=-(200*imgindex),step=10;
+            var imgleft_step= imgleft.offsetLeft<target ? step : -step;
+                clearInterval(timer);
+        
+                timer=setInterval(function(){
+                    imgleft.style.left=imgleft.offsetLeft+imgleft_step+"px";
+                    console.log(imgleft.offsetLeft);
+                        if(Math.abs(target-imgleft.offsetLeft)<Math.abs(imgleft_step)){
+                            clearInterval(timer);
+                            imgleft.style.left=target+"px";
+                        }
+                },50);
     },1000)
+    /************************************************* */
+    // var timer2=setInterval(function(){
+    //          imgindex++;
+    //          if(imgindex>s_ul_lis.length-1){
+    //             $("carousel_top_ul").style.left=0;
+    //              imgindex=1;
+    //          }
+    //          constant($("carousel_top_ul"),-(200*imgindex),50);
+    // },1000)
     //匀速动画
-    function constant(obj,target,step){
-        clearInterval(obj.timer);
+    // function constant(obj,target,step){
+    //     clearInterval(obj.timer);
     
-        var obj_step= obj.offsetLeft<target ? step : -step;    
+    //     var obj_step= obj.offsetLeft<target ? step : -step;    
     
-        obj.timer=setInterval(function(){
-            obj.style.left=obj.offsetLeft+obj_step+"px";
-                if(Math.abs(target-obj.offsetLeft)<Math.abs(obj_step)){
-                    clearInterval(obj.timer);
-                    obj.style.left=target+"px";
-                }
-        },20);
-    }
+    //     obj.timer=setInterval(function(){
+    //         obj.style.left=obj.offsetLeft+obj_step+"px";
+    //             if(Math.abs(target-obj.offsetLeft)<Math.abs(obj_step)){
+    //                 clearInterval(obj.timer);
+    //                 obj.style.left=target+"px";
+    //             }
+    //     },20);
+    // }
     
     //获取id
     function $(id) {
