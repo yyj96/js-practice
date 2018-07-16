@@ -1,5 +1,5 @@
 window.onload = function () {
-    //选项卡
+    //一、选项卡
     var lis =  $("u_l").getElementsByTagName("li");
     var fpc = $("fp_content").getElementsByTagName("div");
     for(var i=0;i<lis.length;i++){      
@@ -17,95 +17,88 @@ window.onload = function () {
         }
     }      
 
-    //轮播图
+    //二、轮播图
+    
     var s_ul_lis = $("carousel_top_ul").children;
-    var imgindex=0;
-
+    var imgindex=0,s_ol_lis_index=0;
+    
+        //1、克隆第一张图片放到最后
     $("carousel_top_ul").appendChild(s_ul_lis[0].cloneNode(true));//克隆第一个li标签，添加在最后一个li后面
 
+        //2、根据图片的个数创建选择控件（圆点），注意个数要减去克隆的那张
     for(var i=0;i<s_ul_lis.length-1;i++){
         var s_ol_li = document.createElement("li");
         $("carousel_top_ol").appendChild(s_ol_li);   //for循环根据图片的个数动态创建圆点的个数
     }
     $("carousel_top_ol").children[0].className="li-selected";
 
+        //3、遍历选择控件（圆点），监听鼠标进入选择控件（圆点）的事件 — — 选中当前的圆点；定位到对应的图片       
     var s_ol_lis=$("carousel_top_ol").children;
-    for(var a=0;a<s_ol_lis.length;a++){
-        (function(a){
+    for(var a=0;a<s_ol_lis.length;a++){             //for循环遍历所有ol下的li
+        (function(a){                               //使用闭包达到同步
             var s_ol_li=s_ol_lis[a];
-            s_ol_li.onmouseover=function(){
+            
+            s_ol_li.onmouseover=function(){         //鼠标进入时，改变选择控件（圆点）的样式
                 for(var b=0;b<s_ol_lis.length;b++){
                     s_ol_lis[b].className="";
                 }
-            this.className="li-selected";
+                this.className="li-selected";
 
             //应用定时器切换图片,要使某元素位置发生改变，则需设置其为定位流
-            /***************************************************************** */
-            var imgleft= $("carousel_top_ul");
-            var timer=null,target=-(200*a),step=10;
-            var imgleft_step= imgleft.offsetLeft<target ? step : -step;
-                clearInterval(timer);
-        
-                timer=setInterval(function(){
-                    imgleft.style.left=imgleft.offsetLeft+imgleft_step+"px";
-                    console.log(imgleft.offsetLeft);
-                        if(Math.abs(target-imgleft.offsetLeft)<Math.abs(imgleft_step)){
-                            clearInterval(timer);
-                            imgleft.style.left=target+"px";
-                        }
-                },50);
-                imgindex=a;
-            /****************************************************************** */
-            // imgindex=a;
+            constant($("carousel_top_ul"),-(200*a),50);     //调用匀速动画函数，图片移动的位置跟选中的选择控件相关
+
+            imgindex=a;
+            s_ol_lis_index=a;
             }
         })(a)
     }
-    /************************************************* */
-    var imgleft= $("carousel_top_ul");
-    var timer2=setInterval(function(){
-        imgindex++;
-        if(imgindex>s_ul_lis.length-1){
-            imgleft.style.left=0;
-            imgindex=1;
-        }
-            var timer=null,target=-(200*imgindex),step=10;
-            var imgleft_step= imgleft.offsetLeft<target ? step : -step;
-                clearInterval(timer);
-        
-                timer=setInterval(function(){
-                    imgleft.style.left=imgleft.offsetLeft+imgleft_step+"px";
-                    console.log(imgleft.offsetLeft);
-                        if(Math.abs(target-imgleft.offsetLeft)<Math.abs(imgleft_step)){
-                            clearInterval(timer);
-                            imgleft.style.left=target+"px";
-                        }
-                },50);
-    },1000)
-    /************************************************* */
-    // var timer2=setInterval(function(){
-    //          imgindex++;
-    //          if(imgindex>s_ul_lis.length-1){
-    //             $("carousel_top_ul").style.left=0;
-    //              imgindex=1;
-    //          }
-    //          constant($("carousel_top_ul"),-(200*imgindex),50);
-    // },1000)
-    //匀速动画
-    // function constant(obj,target,step){
-    //     clearInterval(obj.timer);
+
+        //4、自动轮播 — — 图片和选择控件自动切换
+    var timer1=setInterval(autoplay,1000)           //注意：autoplay后不能加括号，否则将返回函数autoplay的返回值
     
-    //     var obj_step= obj.offsetLeft<target ? step : -step;    
+        //5、当鼠标进入图片时，停止轮播；当鼠标离开图片时，继续轮播
+    $("carousel").onmouseover=function(){
+        clearInterval(timer1);                      //注意：此处使用了第4步的timer1
+    }
+    $("carousel").onmouseout=function(){
+     timer1=setInterval(autoplay,1000);             //注意：此处使用了第4步的timer1
+    }
+
+//自动轮播
+    function autoplay(){
+            imgindex++;
+            if(imgindex>s_ul_lis.length-1){            //当imgindex大于3，即加到4时，将其置1
+                $("carousel_top_ul").style.left=0;  
+                imgindex=1;                            //即播放到最后一张（克隆的）图片，则跳回第二张图片
+            }
+            constant($("carousel_top_ul"),-(200*imgindex),50);
+
+            s_ol_lis_index++;
+            if(s_ol_lis_index>s_ol_lis.length-1){                
+                s_ol_lis_index=0;
+            }
+            for(var c=0;c<s_ol_lis.length;c++){
+                s_ol_lis[c].className="";
+            }
+            s_ol_lis[s_ol_lis_index].className="li-selected";
+    }
+
+//匀速动画
+    function constant(obj,target,step){
+        clearInterval(obj.timer);
     
-    //     obj.timer=setInterval(function(){
-    //         obj.style.left=obj.offsetLeft+obj_step+"px";
-    //             if(Math.abs(target-obj.offsetLeft)<Math.abs(obj_step)){
-    //                 clearInterval(obj.timer);
-    //                 obj.style.left=target+"px";
-    //             }
-    //     },20);
-    // }
+        var obj_step= obj.offsetLeft<target ? step : -step;    
     
-    //获取id
+        obj.timer=setInterval(function(){
+            obj.style.left=obj.offsetLeft+obj_step+"px";
+                if(Math.abs(target-obj.offsetLeft)<Math.abs(obj_step)){
+                    clearInterval(obj.timer);
+                    obj.style.left=target+"px";
+                }
+        },20);
+    }
+    
+//获取id
     function $(id) {
         return typeof id ==="string" ? document.getElementById(id) :null;
     }   

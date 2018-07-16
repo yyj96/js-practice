@@ -83,7 +83,7 @@ a{
     left:50%;
     margin-left:-100px;
     background-color:pink;
-   overflow:hidden;
+    overflow:hidden;
 }
 .second-page .carousel-c .carousel-top ul{
     width:1000px;/*宽度足够宽，则浮动起来会在一行显示，否则会换行*/
