@@ -1,0 +1,187 @@
+*{
+    margin:0;
+    padding:0;
+    list-style:none;
+}
+body{
+    background-color:slategrey;
+}
+a{
+    text-decoration:none;
+    color:#999;
+}
+
+/*弹性导航*/
+.nav{
+    width:400px;
+    height:50px;
+    margin:50px auto;
+    position:relative;
+    background:url(../images/nav_image.png) no-repeat right center;
+    background-size: auto 116%;
+    background-color:pink;
+}
+.nav>span{
+    width:50px;
+    height:30px;
+    position:absolute;
+    left:0;
+    top:50%;
+    margin-top:-15px;
+    background:skyblue;
+    border-radius:10px;
+
+}
+.nav>ul{
+    width:350px;
+    height:100%;
+    position:relative;
+}
+.nav>ul>li{
+    width:50px;
+    height:50px;
+    text-align:center;
+    line-height:50px;
+    float:left;
+    cursor:pointer;
+}
+
+.nav_a{
+    position:fixed; 
+    left:50%;
+    top:0;
+    margin-left:-200px;
+    margin-top:0px;
+    z-index:99;
+}
+
+/*选项卡*/
+.first-page{
+    width:500px;
+    height:300px;
+    margin:100px auto;
+    text-align:center;
+    background-color:#ccc;
+}
+.first-page>h1{
+    font-weight:bolder;
+    font-size:30px;
+}
+.first-page>ul{
+    width:300px;
+    height:50px;
+    text-align:center;
+    margin-top:20px;
+    margin-left:100px;
+    background-color:skyblue;
+}
+.first-page>ul>li{
+    width:100px;
+    height:50px;
+    line-height:50px;
+    float:left; 
+    cursor:pointer;
+    background-color:pink;
+}
+.first-page>ul>li.selected{
+    background-color:orange;
+    color:white;
+}
+.first-page .fp-content{
+    width:300px;
+    height:150px;
+    margin-left:100px;
+    overflow:hidden;
+    background-color:skyblue;
+}
+.first-page .fp-content ul{
+    width:100%;
+    height:100%;  
+}
+.first-page .fp-content ul li{
+    width:150px;
+    float:left;
+    text-align:center;
+    margin:10px 0;
+    background-color:white;  
+}
+.first-page .fp-content .fpc{
+    width: 100%;
+    height: 100%;
+}
+
+/*轮播图*/
+.second-page{
+    width:500px;
+    height:300px;
+    margin:100px auto;
+    text-align:center;
+    background-color:#ccc;
+}
+.second-page .carousel-c{
+    background-color:skyblue;
+    margin-top:30px;
+    width:500px;
+    height:200px;
+    position: relative;
+}
+.second-page .carousel-c .carousel-top{
+    width:200px;
+    height:200px;
+    position:relative;
+    top:0;
+    left:50%;
+    margin-left:-100px;
+    background-color:pink;
+    overflow:hidden;
+}
+.second-page .carousel-c .carousel-top ul{
+    width:1000px;/*宽度足够宽，则浮动起来会在一行显示，否则会换行*/
+    height:100%;
+    position:absolute;
+    top:0;
+    left:0;
+}
+.second-page .carousel-c .carousel-top ul li{
+    float:left;
+    width:200px;
+    height:100%;
+}
+.second-page .carousel-c .carousel-top a{
+    width:100%;
+    height:100%;
+    display:inline-block;
+}
+.second-page .carousel-c .carousel-top img{
+    width:100%;
+    height:100%;   
+    vertical-align:top;/*去除图片间的间隙*/
+}
+.second-page .carousel-c .carousel-bottom{
+    width:200px;
+    height:30px;
+    position:absolute;
+    right:50%;
+    bottom:0;
+    margin-right:-100px;
+    /* background-color:pink;    */
+}
+.second-page .carousel-c .carousel-bottom ol {
+    line-height:30px;
+}
+.second-page .carousel-c .carousel-bottom ol li{
+    display:inline-block;
+    width:12px;
+    height:12px;
+    border:2px solid #999;
+    cursor:pointer;
+    border-radius:50%;
+    box-sizing:border-box;
+    margin-right:5px;
+    color:#333;
+    font-size:12px;
+}
+.second-page .carousel-c .carousel-bottom ol li.li-selected{
+    background-color:orange;
+    border:1px solid #fff;
+}
