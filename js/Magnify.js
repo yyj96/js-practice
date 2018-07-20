@@ -83,7 +83,7 @@ window.onload = function () {
             s_ol_lis[s_ol_lis_index].className="li-selected";
     }
 
-/*匀速动画*/
+////匀速动画////
     function constant(obj,target,step){
         clearInterval(obj.timer);
     
@@ -126,7 +126,7 @@ window.onload = function () {
 
     }
 
-/*缓动动画*/ 
+////缓动动画////
     // var begin=0,end=0;
     //     timer2=setInterval(function(){
     //         begin=begin+(end-begin)*0.1;
@@ -144,7 +144,7 @@ window.onload = function () {
     //     // console.log(scroll_v().top,$("navigation").offsetTop);
     // }
 
-/*获取scroll家族的兼容性写法*/    
+////获取scroll家族的兼容性写法////  
     function scroll_v(){
         if(window.pageYOffset!==null){
             return {
@@ -178,7 +178,7 @@ window.onload = function () {
     window.onscroll=function(){
         scroll_top=scroll_v().top;
 
-        /*导航*/ 
+        /*导航吸顶*/ 
         if(document.documentElement.scrollTop>$("navigation").offsetTop){   //注意scroll家族的获取
             $("navigation").className="nav nav_a";
         } else{
@@ -214,8 +214,96 @@ window.onload = function () {
         
     }
 
+    //六、放大镜    
+    var mag=$("magnify");
+    var mag_s=$("magnify_s");
+    var mag_s_img=mag_s.children[0];
+    var mag_s_span=mag_s.children[1];
+    var mag_b=$("magnify_b");
+    var mag_b_img=mag_b.children[0];
+    // var mag_lis=mag.getElementsByTagName("li");
+    var mag_lis=mag.children[2].getElementsByTagName("li");
 
-/*获取id*/
+    mag_s.onmouseover=function(){
+        mag_s_span.style.display="block";
+        mag_b.style.display="block";
+
+        mag_s.onmousemove=function(event){                              //鼠标移动时
+            var e=event||window.event;
+            var mag_s_top=window.getComputedStyle(mag_s,null)["top"];   //获取CSS的样式，获取到的为字符串类型
+            var mag_s_span_top,mag_s_span_left;
+
+            mag_s_span_left=e.clientX-mag.offsetLeft;                   //clientX：可视距离；该距离为event对象的属性，获取方法为event.clientX
+            mag_s_span_top=e.pageY-mag.offsetTop-parseInt(mag_s_top);   //pageY：可视距离+滚动距离；该距离为event对象的属性，获取方法为event.pageY；mag_s_top为字符串类型，需转成数值类型
+                       
+           
+            var mag_s_span_l=mag_s_span_left-mag_s_span.offsetWidth*0.5; //改变中心点的位置，减去自身宽度的一半
+            var mag_s_span_t=mag_s_span_top-mag_s_span.offsetHeight*0.5; 
+            
+            //判断条件一定要放在输出前，因为程序是从上至下执行，否则更新后的数据不能作用到输出处
+            if(mag_s_span_l<0){
+                mag_s_span_l=0;
+            } else if(mag_s_span_l>=mag_s.offsetWidth-mag_s_span.offsetWidth){
+                mag_s_span_l=mag_s.offsetWidth-mag_s_span.offsetWidth;
+            }   
+            // console.log(mag_s_span_l,mag_s.offsetWidth,mag_s_span.offsetWidth);
+            
+            if(mag_s_span_t<0){
+                mag_s_span_t=0;
+            } else if(mag_s_span_t>=mag_s.offsetHeight-mag_s_span.offsetHeight){
+                mag_s_span_t=mag_s.offsetHeight-mag_s_span.offsetHeight;
+            } 
+            // console.log(mag_s_span_t,mag_s.offsetHeight,mag_s_span.offsetHeight);
+
+            // mag_s_span.style.left=mag_s_span_left-mag_s_span.offsetWidth*0.5+"px";  //offsetWidth=border+内容+padding；将0.5改成50%会出错
+            // mag_s_span.style.top=mag_s_span_top-mag_s_span.offsetHeight*0.5+"px";
+            mag_s_span.style.left=mag_s_span_l+"px";
+            mag_s_span.style.top=mag_s_span_t+"px";
+            // console.log(mag_s_span_left,mag_s_span_top,e.clientX,e.clientY,e.pageX,e.pageY,mag.offsetLeft,mag.offsetTop,parseInt(mag_s_top)); 
+        
+            //比例换算
+            //小图距离:大图距离=小图宽度:大图宽度
+            //大图距离= 小图距离/（小图宽度:大图宽度）
+            //要使大图移动，需要设置大图的CSS样式为定位
+            mag_b_img.style.left=-mag_s_span_l/(mag_s.offsetWidth/mag_b.offsetWidth)+180+"px";    //此处的180为调试出来的值，选取小图宽度的一半，看看图片向左多移动了多少像素，便加回来
+            mag_b_img.style.top=-mag_s_span_t/(mag_s.offsetHeight/mag_b.offsetHeight)+260+"px";   //此处的260为调试出来的值，选取小图高度的一半，看看图片向上多移动了多少像素，便加回来
+            // console.log(mag_s_img.offsetWidth,mag_b_img.offsetWidth,mag_s_span_l,mag_s.offsetLeft,mag_b.offsetLeft);
+            // console.log(mag_b_img.offsetLeft,mag_s_span_l);      //调试出180
+            // console.log(mag_b_img.offsetTop,mag_s_span_t);       //调试出260
+        }
+        
+    };
+    mag_s.onmouseout=function(){
+        mag_s_span.style.display="none";
+        mag_b.style.display="none";
+    };
+
+
+    for(var e=0;e<mag_lis.length;e++){  //切换显示图片
+        
+        (function(e){                   //闭包，同步异步问题
+            var mag_li=mag_lis[e];
+          //var index=e+1;
+            mag_li.onclick=function(){
+                // mag_s_img.setAttribute("src","images/magnify-"+index+".jpeg");           
+                mag_s_img.setAttribute("src","images/magnify-"+(e+1)+".jpeg");      //设置属性
+                mag_b_img.setAttribute("src","images/magnify-"+(e+1)+".jpeg");
+            }                          
+        })(e);
+    }
+
+////JS获取CSS的样式////
+// function getStyleAttr(obj,attr){
+//     if(obj.currentStyle){
+//         return obj.currentStyle[attr];
+//     } else {
+//         return window.getComputedStyle(obj,null)[attr]; 
+//     }
+// }
+// console.log(getStyleAttr(obj,"top"));  //attr值为字符串类型，记得加引号
+//     //获取到的值为字符串类型，可用parseInt()转换为数值类型，从而参与运算
+
+////获取id////
     function $(id) {
         return typeof id ==="string" ? document.getElementById(id) :null;
     }   
