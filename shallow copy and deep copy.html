@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+深拷贝与浅拷贝<br>
+
+深浅拷贝的区别只适用于array【数组】与object【对象】<br><hr>
+
+  浅拷贝（shallow copy）：只复制指向某个对象的指针，而不复制对象本身，新旧对象共享一块内存； <br>
+  深拷贝（deep copy）：复制并创建一个一摸一样的对象，不共享内存，修改新对象，旧对象保持不变。<br>
+    
+<script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>  
+
+    <script>
+        // 对于简单的数据类型Number、String、Boolean、Null、Undefined
+        var a=1;
+        var b=a;    //b=1
+        a=2;
+
+        console.log(a); //2
+        console.log(b); //1
+
+        var c=3;
+        var d=c;    //d=3
+        d=4;
+
+        console.log(c); //3
+        console.log(d); //4
+
+/*----------------------------------*/
+console.log("--------------数组浅拷贝-------------------------");
+        //对于复杂的数据类型
+        //一、数组
+        // 1、浅拷贝
+        var a=[0,1,2];
+        var b=a;
+        // console.log("a："+a);    //此处用“+”，a会以字符串的形式输出，与前一个字符串拼接
+        console.log("a:",a)
+        console.log("b:",b);     
+        console.log("------change b-------");
+
+        b[0]=3;
+        console.log("a:",a);
+        console.log("b:",b);
+
+        // 2、深拷贝
+console.log("---------------数组深拷贝-方法1---slice()--Array高级API--------------------");
+
+        var a=[0,1,2];
+        var b=a.slice(0);   //返回一个新的数组，包含从 start 到 end （不包括该元素）的数组项
+                            // start参数必需要；若未指定end参数，那么切分的数组包含从 start 到数组结束的所有元素
+        console.log("a:",a);
+        console.log("b:",b);
+        console.log("--------change b----------");
+
+        b[0]=3;
+        console.log("a:",a);
+        console.log("b:",b);
+
+console.log("---------------数组深拷贝-方法2---concat()--Array常用方法--------------------");  
+
+        var a=[0,1,2];
+        var b=a.concat([]); //返回一个新的数组，该数组是通过把所有 arrayX 参数添加到 arrayObject 中生成的。
+                            // 如果要进行 concat() 操作的参数是数组，那么添加的是数组中的元素，而不是数组。
+                            // arrayObject.concat(arrayX,arrayX,......,arrayX),参数是必需的      
+        // var b=a.concat(5);
+
+        console.log("a:",a);
+        console.log("b:",b);
+        console.log("---------change b-------------");
+
+        b[0]=3;
+        console.log("a:",a);
+        console.log("b:",b);
+
+console.log("---------------数组深拷贝-方法3---extend()--jQuery方法--------------------");  
+        //对于一维数组
+console.log("对于一维数组");
+        //[deep]值为false时
+        console.log("extend()方法中的参数[deep]值为false时");
+        var a=[0,1,2];
+        var b=$.extend([],a);       // jQuery.extend([deep], target, object1, object2, object3...),
+                                    // [deep]:指示是否深度合并对象，默认为false【不支持第一个参数传递 false】；值为true时深度合并对象。
+                                    // target：其他对象复制到该对象
+                                    // object：被合并的对象
+        console.log("a:",a);
+        console.log("b:",b);
+        console.log("---------change b-------------");
+
+        b[0]=3;
+        console.log("a:",a);
+        console.log("b:",b);
+
+        //[deep]值为true时
+        console.log("extend()方法中的参数[deep]值为true时");
+        var a=[0,1,2];
+        var b=$.extend(true,[],a);
+        console.log("a:",a);
+        console.log("b:",b);
+        console.log("---------change b-------------");
+
+        b[0]=3;
+        console.log("a:",a);
+        console.log("b:",b);
+
+//对于二维数组
+console.log("对于二维数组");
+        //[deep]值为false时
+        console.log("extend()方法中的参数[deep]值为false时");
+        var a=[0,1,2,[3],4,[5,6,7]];
+        var b=$.extend([],a);       
+        console.log("a:",a);
+        console.log("b:",b);
+        console.log("---------change b-------------");
+
+        b[0]=3;
+        b[3]=33;
+        b[6]=333;
+
+        b[5][1]=555;
+        console.log("a:",a);
+        console.log("b:",b);
+
+console.log("对于a数组：1、改变前与改变后的相等；2、a数组会随b数组的改变而改变；3、a数组的值仅在b数组的二维处（即b[5][1]=555）发生了改变");
+console.log("对于b数组：1、改变前与改变后的有一处不同（在b[0]=3处）；2、b数组随b数组的值改变而改变");
+
+        //[deep]值为true时
+        console.log("extend()方法中的参数[deep]值为true时");
+        var a=[0,1,2,[3],4,[5,6,7]];
+        var b=$.extend(true,[],a);
+        console.log("a:",a);
+        console.log("b:",b);
+        console.log("---------change b-------------");
+
+        b[0]=3;
+        b[3]=33;
+        b[6]=333;
+
+        b[5][1]=555;
+        console.log("a:",a);
+        console.log("b:",b);
+
+console.log("对于a数组：1、改变前与改变后的相等；2、a数组不会随b数组的改变而改变");
+console.log("对于b数组：1、改变前与改变后的有一处不同（在b[0]=3处）；2、b数组随b数组的值改变而改变");
+
+
+/*--------------------------------------------------------------------------------------*/
+
+        //对于复杂的数据类型
+        //二、对象
+// 浅拷贝：只拷贝对象的第一层属性，对于属性中包含的属性不会复制；由于JS对象均以地址的方式存贮，所以浅复制导致多个对象的属性均指向同一块地址。
+// 深拷贝：对对象的每一层属性进行递归复制，深层次的属性也不会指向同一块地址【同一个对象】。
+        
+        // 1、浅拷贝
+console.log("--------------对象浅拷贝-方法1------------------------");        
+       function shallowCopy(obj1,obj2){
+           for(var key in obj1){                //for in遍历对象的属性
+               if(obj1.hasOwnProperty(key)){    //Object对象的方法--hasOwnProperty()函数
+                                                //该函数用于指示一个对象自身(不包括原型链)是否具有指定名称的属性。如果有，返回true，否则返回false
+                   obj2[key]=obj1[key];         
+               }
+           }
+       }
+       function showKeys(obj){
+           for(var key in obj){
+               if(obj.hasOwnProperty(key)){
+                   console.log(key,":",obj[key]);
+               }
+           }
+       }
+
+       var a={
+           sing:true,
+           dance:{today:false,tomorrow:true}
+       }
+       var b={}
+
+       shallowCopy(a,b);
+       showKeys(a);
+       showKeys(b);
+       console.log("--------change b----------");
+
+       b.sing=false;
+       b.dance.today=true;
+       showKeys(a);
+       showKeys(b);
+
+console.log("对于a对象：1、a对象会随b对象的改变而改变；2、a对象的值仅在b对象的第二层处（即dance.today）发生了改变");
+console.log("对于b对象：1、b对象随b对象的值改变而改变");
+
+
+
+console.log("--------------对象浅拷贝-方法2--jquery的extend函数--【deep】参数为false--------------------");  
+        function showKeys(obj){
+           for(var key in obj){
+               if(obj.hasOwnProperty(key)){
+                   console.log(key,":",obj[key]);
+               }
+           }
+        }
+       
+        var a={
+           sing:true,
+           dance:{today:false,tomorrow:true}
+        }
+        var b=$.extend({},a);
+
+        showKeys(a);
+        showKeys(b);
+        console.log("--------change b----------");
+
+        b.sing=false;
+        b.dance.today=true;
+        showKeys(a);
+        showKeys(b);
+
+console.log("对于a对象：1、a对象会随b对象的改变而改变；2、a对象的值仅在b对象的第二层处（即dance.today）发生了改变");
+console.log("对于b对象：1、b对象随b对象的值改变而改变");           
+
+
+        // 2、深拷贝
+console.log("---------------对象深拷贝-方法1---jquery的extend函数--【deep】参数为true--------------------");
+
+        function showKeys(obj){
+            for(var key in obj){
+                if(obj.hasOwnProperty(key)){
+                    console.log(key,":",obj[key]);
+                }
+            }
+        }
+
+        var a={
+            sing:true,
+            dance:{today:false,tomorrow:true}
+        }
+        var b=$.extend(true,{},a);
+
+        showKeys(a);
+        showKeys(b);
+        console.log("--------change b----------");
+
+        b.sing=false;
+        b.dance.today=true;
+        showKeys(a);
+        showKeys(b);
+
+console.log("对于a对象：1、a对象不会随b对象的改变而改变");
+console.log("对于b对象：1、b对象随b对象的值改变而改变"); 
+console.log("多层属性深拷贝，互不影响")        
+
+    </script>
+</body>
+</html>

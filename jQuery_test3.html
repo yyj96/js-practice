@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>jQuery_test3</title>
+    </head>
+
+    <body>
+
+        <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
+
+        <script>
+
+//--------------------------------------------------------
+            // 属性
+
+
+            //1、 delegate() 方法为指定的元素（属于被选元素的子元素）添加一个或多个事件处理程序，并规定当这些事件发生时运行的函数。
+            // 使用 delegate() 方法的事件处理程序适用于当前或未来的元素（比如由脚本创建的新元素）。
+            $("div").delegate("button","click",function(){
+                $("p").slideToggle();
+            });
+            
+ //--------------------------------------------------------  
+
+            //2、 attr() 方法设置或返回被选元素的属性值
+            $("button").click(function(){
+                $("img").attr("width","180");
+            });
+ 
+ //--------------------------------------------------------  
+               
+            // 3、attr(name|properties|key,value|fn)设置或返回被选元素的属性值
+            // 参数properties
+            $("img"),attr({src:"test.jpg",alt:"Test image"});
+            // 参数key,回调函数
+            $("img").attr("title",function(){return this.scr});     //把src属性的值设置为title属性的值
+
+ //--------------------------------------------------------  
+    
+            // 4、removeAttr(name)从每一个匹配的元素中删除一个属性
+            $("img").removeAttr("src");
+
+ //--------------------------------------------------------  
+    
+            // 5、prop(name|properties|key,value|fn)用于返回属性值时，则返回第一个匹配元素的值；
+                                                 // 用于设置属性值时，则为匹配元素集合设置一个或多个属性/值对
+            // 参数name 描述:     
+            $("input[type='checkbox']").prop("checked");   // 若复选框选中，则返回结果为true，没选中为false
+            
+            // 参数properties 描述:
+            // 禁用页面上的所有复选框。
+            $("input[type='checkbox']").prop({ disabled: true });
+
+            // 参数key,value 描述:
+            // 禁用和选中所有页面上的复选框。
+            $("input[type='checkbox']").prop("disabled", true);
+            $("input[type='checkbox']").prop("checked", true);
+            
+            // 参数key,回调函数 描述:
+            // 通过函数来设置所有页面上的复选框被选中。
+ /*【不太懂！！！】*/  $("input[type='checkbox']").prop("checked", function( i, val ) { return !val; });
+
+ //--------------------------------------------------------  
+            // 6、removeProp(name)用来删除由.prop()方法设置的属性集
+            // jQuery 文档操作 - append() 方法--在元素结尾插入内容            
+            $(document).ready(function(){
+                $("button").click(function(){
+                    var $x = $("div");
+                    $x.prop("color","FF0000");
+                    $x.append("color 属性值为: " + $x.prop("color"));   //此处用了“+”拼接
+                    $x.removeProp("color");
+                    $x.append("<br>现在 color 属性值为: " + $x.prop("color"));
+                });
+            });
+            // 结果:
+            // color 属性值为: FF0000
+            // 现在 color 属性值为: undefined
+
+            // String()把对象的值转换为字符串
+            var $para = $("p");
+            $para.prop("luggageCode", 1234);
+            $para.append("The secret luggage code is: ", String($para.prop("luggageCode")), ". ");  //此处用了“，'拼接
+            $para.removeProp("luggageCode");
+            $para.append("Now the secret luggage code is: ", String($para.prop("luggageCode")), ". ");
+            // 结果:
+            // The secret luggage code is: 1234. Now the secret luggage code is: undefined. 
+ 
+ //--------------------------------------------------------  
+   
+            // 7、addClass(class|fn)为每个匹配的元素添加指定的类名   (添加到元素中的CSS类名，请用空格分开)
+                //removeClass([class|fn]) 从所有匹配的元素中删除全部或者指定的类
+            $("p").addClass("selected1 selected2");
+
+            $("ul li:last").addClass(function(){return "selected"+$(this).index();});
+
+            $("p").removeClass();   //删除匹配元素的所有类
+
+            
+            // jQuery 遍历 - prev() 方法--获得匹配元素集合中每个元素紧邻的前一个同胞元素
+            // 删除最后一个li元素的前面一个li元素的class属性的值
+            $('li:last').removeClass(function() {
+                return $(this).prev().attr('class');
+            });
+ 
+ //--------------------------------------------------------  
+            // 8、toggleClass(class|fn[,sw])如果存在（不存在）就删除（添加）一个类
+            $("p").toggleClass("selected");  //如果p元素存在selected类，则删除这个selected类
+                                            //如果p元素不存在selected类，则为其添加这个selected类
+            var count = 0;
+            $("p").click(function(){
+                $(this).toggleClass("highlight", count++ % 3 == 0); //每点击三下加上一次 'highlight' 类
+            });
+            
+            $('div.foo').toggleClass(function() {
+                if ($(this).parent().is('.bar')) {
+                    return 'happy';
+                } else {
+                    return 'sad';
+                }
+            });
+ 
+ //--------------------------------------------------------  
+            //9、html([val|fn])取得第一个匹配元素的html内容。这个函数不能用于XML文档。但可以用于XHTML文档
+            // 无参数 描述:
+            // 返回p元素的内容。
+            $('p').html();
+
+            // 参数val 描述:
+            // 设置所有 p 元素的内容
+            $("p").html("Hello <b>world</b>!");
+
+            // 回调函数描述:function(index, html)
+            // 使用函数来设置所有匹配元素的内容。此函数返回一个HTML字符串。接受两个参数，index为元素在集合中的索引位置，html为原先的HTML值
+            $("p").html(function(n){
+                return "这个 p 元素的 index 是：" + n;
+                });
+ //--------------------------------------------------------  
+            
+            // 10、 text([val|fn])取得所有匹配元素的内容。结果是由所有匹配元素包含的文本内容组合起来的文本。这个方法对HTML和XML文档都有效。
+            // 无参数 描述:
+            // 返回p元素的文本内容
+            $('p').text();
+
+            // 参数val 描述:
+            // 设置所有 p 元素的文本内容
+            $("p").text("Hello <b>world</b>!");     //此处的<b>为文本而不是标签，因此<b>不会对world文本的赋予语义
+
+            // 回调函数描述:function(index, html)
+            // 使用函数来设置所有匹配元素的文本内容,此函数返回一个字符串。接受两个参数，index为元素在集合中的索引位置，text为原先的text值
+            $("p").text(function(n){
+                return "这个 p 元素的 index 是：" + n;
+                });
+        
+            // 11、val([val|fn|arr])获得匹配元素的当前值
+            // 无参数 描述:
+            // 获取文本框中的值
+            $("input").val();
+
+            // 参数val 描述:
+            // 设定文本框的值
+            $("input").val("hello world!");
+
+            // 回调函数 描述:
+            // 设定文本框的值
+            $('input:text.items').val(function() {
+            return this.value + ' ' + this.className;
+            });
+
+            // 参数array 描述:
+            // 设定一个select和一个多选的select的值
+            // HTML 代码:
+            // <select id="single">
+            //          <option>Single</option>
+            //          <option>Single2</option>
+            // </select>
+            // <select id="multiple" multiple="multiple">
+            //          <option selected="selected">Multiple</option>
+            //          <option>Multiple2</option>
+            //          <option selected="selected">Multiple3</option>
+            // </select><br/>
+            // <input type="checkbox" value="check1"/> check1
+            // <input type="checkbox" value="check2"/> check2
+            // <input type="radio" value="radio1"/> radio1
+            // <input type="radio" value="radio2"/> radio2
+            // jQuery 代码:
+            // $("#single").val("Single2");
+            // $("#multiple").val(["Multiple2", "Multiple3"]);
+            // $("input").val(["check2", "radio1"]);
+        
+        
+        
+        
+        
+        
+        
+        </script>
+    </body>
+
+</html>

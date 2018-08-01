@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+同步、异步
+
+    JS是一种单线程语言
+    同步任务：在主线程上排队执行的任务，前一个任务执行完后，才执行下一个任务；
+    异步任务：它被放在一个任务队列中，队列里的任务根据延时时间的大小自动排队，时间较短的任务先执行，执行完后再执行下一个任务
+
+    常见的异步任务有setTimeOut,setInterval,ajax
+    <script>
+        window.onload=function(){
+    console.log(1);
+    alert("2");
+    setTimeout(() => {
+        console.log(3);
+    }, 5000);
+    setTimeout(() => {
+        console.log(4);
+    }, 2000);
+    console.log(5);
+}
+    </script>
+</body>
+</html>
+

@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>jquery_test2</title>
+    </head>
+
+    <body>
+
+        <span id="foo:bar"></span>
+        <span id="foo[bar]"></span>
+
+        <div>DIV1</div>
+        <div>DIV2</div>
+        <span>SPAN</span>
+        <p class="myClass">P</p>
+
+        <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
+
+        <script>
+            //选择器
+            // 1、查找含有特殊字符的元素
+            $("#foo\\[bar\\]");
+            console.log($("#foo\\[bar\\]"));
+            // 结果:
+            // [ <span id="foo[bar]"></span>]
+            
+            // 2、查找一个 DIV 元素
+            $("div");
+            // 结果:
+            // [ <div>DIV1</div>, <div>DIV2</div> ]
+
+            // 3、找到每一个元素
+            $("*");
+
+            // 4、找到匹配任意一个类的元素
+            $("div,span,p.myClass");
+
+            // 5、找到父元素下的指定的所有后代元素(div下的所有p,儿子、孙子、重孙子等后代)
+            $("div p");
+
+            // 6、匹配所有紧接在 prev 元素后的 next 元素(紧接在div后的span元素)
+            $("div + span");
+
+            // 7、找到所有与prev 元素同辈的所有 siblings 元素（找到所有与div同辈的 span 元素）
+            $("div ~ span");
+
+            // 8、:not(selector)去除所有与给定选择器匹配的元素（查找所有没有checked的 input 元素）
+            $("input:not(:checked)");
+
+            // 9、:even匹配所有索引值为偶数的元素，从 0 开始计数（查找索引值为偶数的span元素）
+                // :odd匹配所有索引值为奇数的元素，从 0 开始计数
+                // :eq(index)匹配一个给定索引值的元素，从 0 开始计数
+                // :gt(index)匹配所有大于给定索引值的元素
+                // :lt(index)匹配所有小于给定索引值的元素
+                // :lang(language)选择指定语言的所有元素
+                // :header匹配如 h1, h2, h3之类的标题元素
+                // :hidden匹配所有不可见元素，或者type为hidden的元素
+                // :visible匹配所有可见元素
+                // :animated匹配所有正在执行动画效果的元素 :not(:animated)只有对不在执行动画效果的元素执行动画特效
+                // :focus匹配当前获取焦点的元素--【备注：不太熟悉】
+                // :root选择该文档的根元素，在HTML中，文档的根元素，和$(":root")选择的元素一样， 永远是<html>元素。
+            $("span:even");
+            
+            $("div:not(:animated)");
+
+            setTimeout(function() {
+                elem.toggleClass( "focused", elem.is( ":focus" ) );
+            }, 0);
+
+            $(":root");
+
+            // :target选择由文档URI的格式化识别码表示的目标元素
+            // 例如，给定的URI http://example.com/#foo， $( "p:target" )，将选择<p id="foo">元素。
+
+            // :contains(text)匹配包含给定文本的元素（查找所有包含 "John" 的 div 元素）
+            $("div:contains('John')");
+
+            // :empty查找所有不包含子元素或者文本的元素（查找所有不包含子元素或者文本的td元素）
+            // :parent查找所有包含子元素或者文本的元素（查找所有包含子元素或者文本的 td 元素）
+            $("td:empty");
+            $("td:parent");
+
+            // :has(selector)匹配含有选择器所匹配的元素的元素（匹配所有包含 p 元素的 div 元素）
+            $("div:has(p)");
+
+//--------------------------------------------------------
+
+            // 10、[attribute]匹配包含给定属性的元素（查找所有含有 id 属性的 div 元素）
+                // [attribute=value]匹配给定的属性是某个特定值的元素
+                // [attribute!=value]
+                // [attribute^=value]匹配给定的属性是以某些值开始的元素
+                // [attribute$=value]匹配给定的属性是以某些值结尾的元素
+                // [attribute*=value]匹配给定的属性是以包含某些值的元素
+                // [selector1][selector2][selectorN]（找到所有含有 id 属性，并且它的 name 属性是以 man 结尾的）
+            $("div[id]");
+            $("input[type='password']");
+            
+            $("input[id] [name$='man']");
+
+//--------------------------------------------------------
+
+            // 11、:first-child--相当于:nth-child(1),匹配所给选择器的第一个子元素（在每个 ul 中查找第一个 li）
+                // :last-child
+                // :nth-child
+                // :first-of-type--相当于:nth-of-type(1) ,匹配E的父元素的第一个E类型的孩子
+                // :last-of-type
+            $("ul li:first-child");     //在每个 ul 中查找第 1 个 li
+            $("ul li:nth-child(3)");    //在每个 ul 中查找第 3 个li
+
+//【着重注意！！！】   $(".abc:first-of-type");//匹配类名为abc的父元素的第一个元素的类名要为abc的孩子
+            // HTML 代码:
+            // <div id="n1">
+            //     <div id="n2" class="abc">
+            //         <label id="n3">label1</label>
+            //         <span id="n4">span1</span>
+            //         <span id="n5" class="abc">span2</span>
+            //         <span id="n6">span3</span>
+            //     </div>
+            //     <div id="n7">
+            //         <span id="n8" class="abc">span1</span>
+            //         <span id="n9">span2</span>
+            //     </div>
+            // </div>
+            // jQuery 代码:
+            // $(".abc:first-of-type");
+            // 结果:
+            // //.abc可以匹配id分别为n2、n5、n8的3个元素，n2是n1所有div类型子元素中的第一个，n8是n7所有span类型子元素中的第一个，但n5不是n2所有span类型子元素中的第一个，因此不能匹配n5。
+            // [<div id="n2" class="abc">,<span id="n8" class="abc">span1</span>]
+
+//--------------------------------------------------------
+
+            // :nth-last-child(n|even|odd|formula)选择所有他们父元素的第n个子元素,计数从最后一个元素开始到第一个
+            // :nth-last-of-type(n|even|odd|formula)选择的所有他们的父元素的第n个子元素，计数从最后一个元素到第一个
+            // :nth-of-type(n|even|odd|formula)选择同属于一个父元素之下，并且标签名相同的子元素中的第n个
+            
+            //    参数         n:子元素的序号；even：偶数；odd：奇数；formula：公式(an+b)
+            $("ul li:nth-last-child(2)")// 在每个ul中查找倒数第二个li
+
+            $("span:nth-of-type(2)");// 查找每个span，这个 span 是 其所有兄弟span元素中的第二个元素
+            // HTML 代码:
+            // <div>
+            //      <span>John</span>
+            //      <b>Kim</b>
+            //      <span>Adam</span>
+            //      <b>Rafael</b>
+            //      <span>Oleg</span>
+            // </div>
+            // <div>
+            //      <b>Dave</b>
+            //      <span>Ann</span>
+            // </div>
+            // <div>
+            //      <i>
+            //          <span>Maurice</span>
+            //          <span>Ma</span>
+            //      </i>
+            //      <span>Richard</span>
+            //      <span>Ralph</span>
+            //      <span>Jason</span>
+            // </div>
+            // jQuery 代码:
+            // $("span:nth-of-type(2)"); 
+            // 结果:
+            // [<span>Adam</span>,<span>Ma</span>,<span>Ralph</span>]
+
+            // :only-child如果某个元素是父元素中唯一的子元素，那将会被匹配
+            // 如果父元素中含有其他元素，那将不会被匹配。（注：这里的其他元素并不包含文本节点，如：<p><img/>图片</p>，用$('p img:only-child')是可以匹配)
+            $("ul li:only-child");  //在 ul 中查找是唯一子元素的 li
+
+            // :only-of-type选择所有没有兄弟元素，且具有相同的元素名称的元素。
+            // 如果父元素有相同的元素名称的其他子元素，那么没有元素会被匹配。
+
+//--------------------------------------------------------
+
+            // :input匹配所有 input, textarea, select 和 button 元素
+            // :text匹配所有的单行文本框
+            // :password匹配所有密码框
+            // :radio匹配所有单选按钮
+            // :checkbox匹配所有复选框
+            // :submit匹配所有提交按钮
+            // 理论上只匹配 type="submit" 的input或者button，但是现在的很多浏览器，button元素默认的type即为submit，所以很多情况下，不设置type的button也会成为筛选结果。
+            // 为了防止歧义或者误操作，建议所有的button在使用时都添加type属性。
+            // :image匹配所有图像域
+            // :reset匹配所有重置按钮
+            // :button匹配所有按钮
+            // [ <input type="button" />,<button></button> ]
+            // :file匹配所有文件域
+            $(":input");
+
+            // :enabled匹配所有可用元素
+            // :disabled匹配所有不可用元素
+            // :checked匹配所有选中的被选中元素(复选框、单选框等，select中的option)，对于select元素来说，获取选中推荐使用 :selected
+            // 查找所有可用的input元素
+            $("input:enable");
+            
+            // HTML 代码:
+            // <form>
+            // <input name="email" disabled="disabled" />
+            // <input name="id" />
+            // <input name="id" enabled="enabled"/>
+            // </form>
+            // jQuery 代码:
+            // $("input:enabled")
+            // 结果:
+            // [ <input name="id" />,<input name="id" enabled="enabled"/> ]
+
+            // :selected  匹配所有选中的option元素
+            $("select option:selected");
+
+//【不太懂！！！】  // $.escapeSelector(selector)这个方法通常被用在类选择器或者ID选择器中包含一些CSS特殊字符的时候，这个方法基本上与CSS中CSS.escape()方法类似，唯一的区别是jquery中的这个方法支持所有浏览器。          
+            // 描述:
+            // 选择出类中包含.box的div
+            // HTML 代码:
+            // <div><div class="notMe">div class="notMe"</div>
+            // <div class=".box myClass">div class=".box myClass"</div>
+            // <div class=".box">span class=".box"</div></div>
+            // jQuery 代码:
+            // $( "div" ).find( "." + $.escapeSelector( ".box" ) );
+            // 结果:
+            // [ <div class=".box myClass">div class=".box myClass"</div>,<div class=".box">span class=".box"</div> ]
+
+
+
+//--------------------------------------------------------
+            // 属性
+
+
+            //1、 delegate() 方法为指定的元素（属于被选元素的子元素）添加一个或多个事件处理程序，并规定当这些事件发生时运行的函数。
+            // 使用 delegate() 方法的事件处理程序适用于当前或未来的元素（比如由脚本创建的新元素）。
+            $("div").delegate("button","click",function(){
+                $("p").slideToggle();
+            });
+            //2、 attr() 方法设置或返回被选元素的属性值
+            $("button").click(function(){
+                $("img").attr("width","180");
+            });
+            
+
+
+
+        </script>
+    </body>
+
+</html>

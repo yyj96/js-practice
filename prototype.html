@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+原型、原型链、继承
+<br><hr>
+
+<!-- ********************************************* -->
+    原型：
+    实例对象p_1和p_2的__proto__属性都指向Person的原型对象的prototype属性，
+    并且Person的原型对象的constructor属性指向构造函数本身，即Person
+<br>
+<br>
+
+<!-- ********************************************* -->
+    原型链：
+    每个对象都有一个__proto__属性，指向它的prototype原型对象，
+    而该prototype原型对象又有它自己的prototype原型对象，
+    依次层层往上查询直到prototype的原型对象为null，则该条查询路径为原型链
+<br>
+<br>
+
+<!-- ********************************************* -->
+    当试图访问一个属性或者方法时，它不仅在该对象上查找，也会查找该对象的原型，以及在该对象的原型的原型上查找，
+    依次层层向上查找，知道找到一个值匹配的属性或方法，否则直到原型链末端（null）。<br><br>
+    1.当前实例对象obj，查找obj的属性和方法，找到后返回，否则进行下一步；
+<br>
+    2.通过obj__proto__，查找obj构造函数的prototype对象上的属性和方法，找到后返回，否则进行下一步；
+<br>
+    3.把Array.prototype当做obj，重复以上步骤；
+<br>
+    3.  当查找到Object.prototype时，Object.prototype.__proto__ === null，查找结束
+<br>
+<!-- ********************************************* -->
+    继承是指一个对象使用另一个对象的属性和方法
+    <br>
+    <br>
+    要检查是否具有自己定义的属性，而不是原型链上的属性，必须使用hasOwnProperty方法。
+    hasOwnProperty 是 JavaScript 中唯一处理属性并且不会遍历原型链的方法。
+
+    <script>
+        // 原型
+
+        function Person(name,age,sex){      //构造函数
+            this.name=name;
+            this.age=age;
+            this.sex=sex;
+        }
+        Person.prototype.sayName=function(){    //原型对象属性
+            console.log(this.name);
+        }
+
+        var p1=new Person("blue",20,"man");     //实例
+        var p2=new Person("green",21,"woman");
+
+        console.log(p1.name);   //blue
+        p1.sayName();           //blue
+        console.log(p1);        //Person{name: "blue", age: 20, sex: "man"}
+                                    // age:20
+                                    // name:"blue"
+                                    // sex:"man"
+                                    // _proto_:Object
+
+        console.log(p1._proto_);        //underfined
+        console.log(p1.__proto__);      //{sayName: ƒ, constructor: ƒ}
+                                            // sayName: ƒ ()
+                                            // constructor: ƒ Person(name,age,sex)
+                                            // __proto__: Object
+        console.log(Person.prototype);  //{sayName: ƒ, constructor: ƒ}
+                                            // sayName: ƒ ()
+                                            // constructor: ƒ Person(name,age,sex)
+                                            // __proto__: Object
+        
+        console.log(p1.__proto__===Person.prototype);           //true
+        console.log(p1.__proto__===p2.__proto__);               //true
+        console.log(Person.prototype.constructor===Person);     //true
+
+        console.log(typeof Person);                 //function
+        console.log(typeof Person.prototype);       //object
+        console.log(typeof p1.__proto__);           //object
+
+
+console.log("------------------------------------------------------------");
+
+
+        // 原型链
+        console.log(p1.__proto__);
+        console.log(Person.prototype.__proto__);
+        console.log(Object.prototype.__proto__);    //null
+        
+        console.log(p1.__proto__===Person.prototype);                   //true
+        console.log(Person.prototype.__proto__===Object.prototype);     //true
+        console.log(p1.__proto__.__proto__===Object.prototype)          //true
+        console.log(Object.prototype.__proto__===null);                 //true
+
+        // 原型链：
+        //         p1 --->Person.prototype ---> Object.prototype --->null
+        
+
+console.log("------------------------------------------------------------");
+
+
+
+        // 继承
+        //属性继承
+        function Person(name,age){
+            this.name=name;
+            this.age=age;
+        }
+        Person.prototype.youage=function(){
+            console.log(this.age);
+        }
+
+//创建一个Manager类，它可以继承Person所有的属性，并且额外添加属于自己特定的属性
+ 
+        function Manager(bonus){
+            this.bonus=bonus;
+        }
+
+// 通过call或apply方法指定this为当前的执行环境，这样就可以得到Person类的所有属性
+        
+        function Manager(name,age,bonus){
+            Person.call(this,name,age);         //使用call方法实现子类继承父类的属性
+            // Person.apply(this,[name,age]);   //使用apply方法，第二个参数为一个数组
+            // Person.apply(this,["name","age"]); 
+            this.bonus=bonus;
+        }
+
+// 实例化一个对象，测试子类是否继承父类的属性
+        
+        var a=new Manager("jack",20,10000);
+        console.log(a.name);
+        console.log(a.age);
+        console.log(a.bonus);
+
+
+
+
+        //方法继承
+//当Manager类想要继承Person类的方法时，我们可以先创建一个对象，然后将该对象赋值给Manager.prototype
+// Maneger.prototype = Object.create(Person.prototype);
+// 若Person.prototype直接赋值给Manager.prototype，那么当Manager.prototype改变时，Person.prototype也会随之改变，这是我们所不愿意看到的。
+
+// 另外，在给Manager类添加方法时，应该在修改prototype以后，否则会被覆盖掉，原因是赋值前后的属性值是不同的对象。
+
+// 最后还有一个问题，我们都知道prototype里有个属性constructor指向构造函数本身，但是因为我们是复制其他类的prototype，所以这个指向是不对的，需要更正一下,将constructor指向它本身。如果不修改，会导致我们类型判断出错。
+
+        function Person(name,age){
+            this.name=name;
+            this.age=age;
+        }
+        Person.prototype.youage=function(){
+            console.log("My age is "+this.age);
+        }
+
+        function Manager(bonus){
+            this.bonus=bonus;
+        }
+
+        Manager.prototype=Object.create(Person.prototype);       //继承Person方法
+        Manager.prototype.constructor={constructor:Manager};    //将构造器的constructor指向它本身
+        
+        function Manager(name,age,bonus){
+            Person.call(this,name,age);
+            Person.apply(this,[name,age]);  //使用apply方法，第二个参数为一个数组
+            this.bonus=bonus;
+        }
+
+// 实例化一个对象，测试子类是否继承父类的属性
+        
+        var a=new Manager("jack",20,10000);
+        console.log(a.name);
+        console.log(a.age);
+        console.log(a.bonus);
+         a.youage();             //My age is 20
+    </script>
+</body>
+</html>
